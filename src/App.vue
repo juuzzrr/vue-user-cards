@@ -1,28 +1,60 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <UserCard 
+    v-bind:nickname="nickname"
+    v-bind:photo="photo"
+    v-bind:firstname="firstName"
+    v-bind:lastname="lastName"
+    v-bind:phone="phone"
+    v-bind:address="address"
+    v-bind:email="email"
+    v-bind:city="city"
+    />
+    <button v-on:click="getUserData">
+      Обновить профиль
+    </button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import UserCard from "./components/UserCard.vue";
 export default {
-  name: 'App',
+  name: "app",
   components: {
-    HelloWorld
+    UserCard
+  },
+  data() {
+    return{
+      photo: '',
+      firstName: '',
+      lastName: '',
+      nickname: '',
+      city: '',
+      address: '',
+      email: '',
+      phone: '',
+    }
+  },
+  methods:{
+    getUserData(){
+      this.axios.get("http://37.77.104.246/users/getrandom.php")
+      .then( (response)=>{
+          this.photo=response.data.img;
+          this.firstName=response.data.firstName;
+          this.lastName=response.data.lastName;
+          this.nickname = response.data.email.split('@')[0];
+          this.address=response.data.address;
+          this.phone=response.data.phone;
+          this.city=response.data.city;
+          this.email=response.data.email;
+        }
+    )
   }
+},
+mounted(){
+  this.getUserData();
 }
+};
 </script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
